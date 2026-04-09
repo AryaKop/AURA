@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Jewelry | Timeless Elegance</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="logo">AURA</div>
+        <div class="cart-icon" onclick="toggleCart()" style="cursor:pointer">
+            🛒 <span id="cart-count">0</span>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>Timeless Elegance</h1>
+        <p>Handcrafted pieces for every occasion.</p>
+    </header>
+
+    <div class="filter-bar" style="text-align:center; margin-bottom: 20px;">
+        <button class="filter-btn" onclick="filterProducts('All')">All</button>
+        <button class="filter-btn" onclick="filterProducts('Rings')">Rings</button>
+        <button class="filter-btn" onclick="filterProducts('Necklaces')">Necklaces</button>
+    </div>
+
+    <main id="product-grid" class="container">
+        <p class="loading">Polishing the jewels...</p>
+    </main>
+
+    <div id="cart-sidebar" class="sidebar">
+        <h2>Your Collection</h2>
+        <div id="cart-items"></div>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        <div class="cart-total">Total: $<span id="total-price">0</span></div>
+        <button class="checkout-btn" onclick="checkout()">Request Purchase</button>
+        <br>
+        <button class="close-btn" onclick="toggleCart()" style="background:none; border:none; text-decoration:underline; cursor:pointer; margin-top:10px;">Close</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
