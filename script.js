@@ -1,5 +1,5 @@
 // FRONTEND: This goes in your GitHub script.js file
-const API_URL = 'https://script.google.com/macros/s/AKfycbw0XAf5u7jGBznrgaK-Ely280S6hvzPgcMRRggorAA-dz4m1dury2HjQq6sDL4oLYJV/exechttps://script.google.com/macros/s/AKfycbw0XAf5u7jGBznrgaK-Ely280S6hvzPgcMRRggorAA-dz4m1dury2HjQq6sDL4oLYJV/exec'; 
+const API_URL = 'https://script.google.com/macros/s/AKfycbw0XAf5u7jGBznrgaK-Ely280S6hvzPgcMRRggorAA-dz4m1dury2HjQq6sDL4oLYJV/exec'; 
 
 let cart = [];
 
