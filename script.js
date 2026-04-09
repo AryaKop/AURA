@@ -1,4 +1,3 @@
-// FRONTEND: This goes in your GitHub script.js file
 const API_URL = 'https://script.google.com/macros/s/AKfycbw0XAf5u7jGBznrgaK-Ely280S6hvzPgcMRRggorAA-dz4m1dury2HjQq6sDL4oLYJV/exec'; 
 
 let cart = [];
@@ -11,7 +10,7 @@ async function fetchProducts() {
         const products = await response.json();
         displayProducts(products);
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error loading products:", error);
         grid.innerHTML = "<p>Error loading products. Check your URL and Sheet headers.</p>";
     }
 }
@@ -19,21 +18,23 @@ async function fetchProducts() {
 // 2. Render items to the screen
 function displayProducts(products) {
     const grid = document.getElementById('product-grid');
+    // We use .map() to create the HTML for each piece of jewelry
     grid.innerHTML = products.map(p => `
         <div class="product-card">
             <img src="${p.ImageURL}" alt="${p.Name}">
             <h3>${p.Name}</h3>
+            <p class="sku" style="font-size:0.7rem; color:#888;">SKU: ${p.SKU}</p>
             <p class="price">$${p.Price}</p>
-            <button class="add-to-cart" onclick="addToCart('${p.Name}', ${p.Price})">Add to Collection</button>
+            <button class="add-to-cart" onclick="addToCart('${p.SKU}', '${p.Name}', ${p.Price})">Add to Collection</button>
         </div>
     `).join('');
 }
 
-// 3. Simple Shopping Cart Logic
-function addToCart(name, price) {
-    cart.push({ name, price });
+// 3. Shopping Cart Logic
+function addToCart(sku, name, price) {
+    cart.push({ sku, name, price });
     updateCartUI();
-    toggleCart(true); // Open cart automatically
+    toggleCart(true); 
 }
 
 function updateCartUI() {
@@ -42,8 +43,9 @@ function updateCartUI() {
     const total = cart.reduce((sum, item) => sum + item.price, 0);
     
     cartItems.innerHTML = cart.map(item => `
-        <div class="cart-item">
-            <span>${item.name}</span> - <span>$${item.price}</span>
+        <div class="cart-item" style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <span>${item.name}</span>
+            <span>$${item.price}</span>
         </div>
     `).join('');
     
@@ -56,7 +58,7 @@ function toggleCart(forceOpen = false) {
     else sidebar.classList.toggle('active');
 }
 
-// 4. Send Order Data back to the Backend
+// 4. Send Order Data (Synchronized with Backend)
 async function checkout() {
     if (cart.length === 0) return alert("Your cart is empty!");
     
@@ -65,29 +67,29 @@ async function checkout() {
 
     if(!customerName || !customerEmail) return;
 
+    // This object MUST match what your Google Apps Script is expecting
     const order = {
         name: customerName,
         email: customerEmail,
-        items: cart.map(i => i.name).join(', '),
+        skus: cart.map(i => i.sku).join(', '), // Using 'skus' to match Backend logic
         total: document.getElementById('total-price').innerText
     };
 
     try {
-        // We use 'no-cors' because Apps Script redirects can be tricky with standard fetch
         await fetch(API_URL, {
             method: 'POST',
             mode: 'no-cors', 
             body: JSON.stringify(order)
         });
 
-        alert("Order submitted successfully! We will contact you soon.");
+        alert("Order submitted successfully!");
         cart = [];
         updateCartUI();
         toggleCart();
     } catch (e) {
-        alert("Success! (Note: Browsers sometimes flag the redirect as an error, but check your Sheet!)");
+        alert("Check your Google Sheet—the order likely went through!");
     }
 }
 
-// Load data on start
+// Initialize the store
 fetchProducts();
